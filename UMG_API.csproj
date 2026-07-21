@@ -174,15 +174,18 @@
     <Compile Include="Models\DTO\ReservaCreateDto.cs" />
     <Compile Include="Models\DTO\UsuarioCreateDto.cs" />
     <Compile Include="Models\Lab.cs" />
+    <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\Reserva.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CondicionRepository.cs" />
     <Compile Include="Repositories\LabRepository.cs" />
+    <Compile Include="Repositories\LogRepository.cs" />
     <Compile Include="Repositories\ReservaRepository.cs" />
     <Compile Include="Repositories\UsuarioRepository.cs" />
     <Compile Include="Services\CondicionService.cs" />
     <Compile Include="Services\LabService.cs" />
+    <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\ReservaService.cs" />
     <Compile Include="Services\UsuarioService.cs" />
   </ItemGroup>

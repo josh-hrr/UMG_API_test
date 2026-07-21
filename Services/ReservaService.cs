@@ -7,6 +7,7 @@ namespace UMG_API.Services
     public class ReservaService
     {
         private readonly ReservaRepository _repository = new ReservaRepository();
+        private readonly LogService _logService = new LogService();
 
         public Reserva CrearReserva(int userId, int labId, DateTime fecha, TimeSpan horaInicio,
                                      TimeSpan horaFin, string motivo)
@@ -53,7 +54,19 @@ namespace UMG_API.Services
                     "El laboratorio no está disponible en ese horario debido a un bloqueo registrado (asueto, mantenimiento u otra actividad).");
             }
 
-            return _repository.Crear(userId, labId, fecha, horaInicio, horaFin, motivo.Trim());
+
+            var reserva = _repository.Crear(userId, labId, fecha, horaInicio, horaFin, motivo.Trim());
+
+            _logService.Registrar(
+                userId,
+                "CREAR_RESERVA",
+                "Reservas",
+                $"El usuario {userId} reservó el laboratorio {labId} para el {fecha:yyyy-MM-dd} de {horaInicio} a {horaFin}. Motivo: {motivo}."
+            );
+
+            return reserva;
+
+            // return _repository.Crear(userId, labId, fecha, horaInicio, horaFin, motivo.Trim());
         }
     }
 }

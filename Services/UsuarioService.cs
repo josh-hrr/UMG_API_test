@@ -13,6 +13,7 @@ namespace UMG_API.Services
     public class UsuarioService
     {
         private readonly UsuarioRepository _repository = new UsuarioRepository();
+        private readonly LogService _logService = new LogService();
 
         private static readonly Regex EmailRegex = new Regex(
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled);
@@ -44,7 +45,20 @@ namespace UMG_API.Services
                 throw new InvalidOperationException($"Ya existe un usuario registrado con el correo '{correo}'.");
             }
 
-            return _repository.Crear(correo.Trim().ToUpper(), contrasena, nombre.Trim().ToUpper(), apellido.Trim().ToUpper(), rolId);
+            var usuario = _repository.Crear(correo.Trim().ToUpper(), contrasena, nombre.Trim().ToUpper(), apellido.Trim().ToUpper(), rolId);
+
+            _logService.Registrar(
+                usuario.UMG_ID,
+                "CREAR_USUARIO",
+                "Usuarios",
+                $"Se registró el usuario '{usuario.UMG_Usuario}' con ID {usuario.UMG_ID}."
+            );
+
+            return usuario;
+
+
+
+            //  return _repository.Crear(correo.Trim().ToUpper(), contrasena, nombre.Trim().ToUpper(), apellido.Trim().ToUpper(), rolId);
         }
     }
 

@@ -7,6 +7,7 @@ namespace UMG_API.Services
     public class LabService
     {
         private readonly LabRepository _repository = new LabRepository();
+        private readonly LogService _logService = new LogService();
 
         public Lab CrearLaboratorio(string nombre)
         {
@@ -22,10 +23,19 @@ namespace UMG_API.Services
 
             if (_repository.ExisteNombre(nombre.Trim().ToUpper()))
             {
-                throw new InvalidOperationException($"Ya existe un laboratorio con el nombre '{nombre}'.");
+                throw new InvalidOperationException($"Ya existe un laboratorio con el nombre '{nombre.ToUpper()}'.");
             }
 
-            return _repository.Crear(nombre.Trim().ToUpper());
+            var lab = _repository.Crear(nombre.Trim().ToUpper());
+
+            _logService.Registrar(
+                null, // no hay usuario autenticado en este flujo todavía
+                "CREAR_LABORATORIO",
+                "Laboratorios",
+                $"Se registró el laboratorio '{lab.UMG_Nombre.ToUpper()}' con ID {lab.UMG_ID}."
+            );
+
+            return lab;
         }
     }
 }

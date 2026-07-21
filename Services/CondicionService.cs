@@ -10,6 +10,7 @@ namespace UMG_API.Services
     public class CondicionService
     {
         private readonly CondicionRepository _repository = new CondicionRepository();
+        private readonly LogService _logService = new LogService();
 
         public Condicion CrearCondicion(int? labId, DateTime fecha, TimeSpan horaInicio,
                                          TimeSpan horaFin, string tipo, string motivo)
@@ -35,7 +36,18 @@ namespace UMG_API.Services
                 throw new ArgumentException("El laboratorio especificado no existe o está inactivo.");
             }
 
-            return _repository.Crear(labId, fecha, horaInicio, horaFin, tipo.Trim(), motivo.Trim());
+            var condicion = _repository.Crear(labId, fecha, horaInicio, horaFin, tipo.Trim().ToUpper(), motivo.Trim().ToUpper());
+
+            _logService.Registrar(
+                null,
+                "CREAR_CONDICION",
+                "Condiciones",
+                $"Se registró un bloqueo tipo '{condicion.UMG_Tipo.ToUpper()}' para el {condicion.UMG_Fecha:yyyy-MM-dd}" +
+                (labId.HasValue ? $" en el laboratorio {labId}." : " aplicable a todos los laboratorios.")
+            );
+
+            return condicion;
+            //  return _repository.Crear(labId, fecha, horaInicio, horaFin, tipo.Trim(), motivo.Trim());
         }
     }
 
