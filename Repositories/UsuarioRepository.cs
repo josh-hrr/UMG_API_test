@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using UMG_API.DAL;
 using UMG_API.Models;
+using UMG_API.Models.DTO;
 
 namespace UMG_API.Repositories
 {
@@ -84,5 +85,63 @@ namespace UMG_API.Repositories
                 }
             }
         }
+
+        public LoginResponseDto ValidarCredenciales(string correo, string contrasena)
+        {
+            using (SqlConnection conn = Conexion.ObtenerConexion())
+            {
+                conn.Open();
+
+                string query = @"SELECT u.UMG_ID, u.UMG_Usuario, u.UMG_Nombre, u.UMG_Apellido,
+                                 u.UMG_Rol_ID, r.UMG_Nombre AS UMG_Rol_Nombre
+                          FROM UMG_USERS u
+                          INNER JOIN UMG_ROLES r ON u.UMG_Rol_ID = r.UMG_ID
+                          WHERE u.UMG_Usuario = @Correo 
+                            AND u.UMG_Contrasena = @Contrasena
+                            AND u.UMG_Estado = 1";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.Add("@Correo", SqlDbType.VarChar, 100).Value = correo;
+                    cmd.Parameters.Add("@Contrasena", SqlDbType.VarChar, 255).Value = contrasena;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new LoginResponseDto
+                            {
+                                UMG_ID = Convert.ToInt32(reader["UMG_ID"]),
+                                UMG_Usuario = reader["UMG_Usuario"].ToString(),
+                                UMG_Nombre = reader["UMG_Nombre"].ToString(),
+                                UMG_Apellido = reader["UMG_Apellido"].ToString(),
+                                UMG_Rol_ID = Convert.ToInt32(reader["UMG_Rol_ID"]),
+                                UMG_Rol_Nombre = reader["UMG_Rol_Nombre"].ToString()
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null; // no encontrado = credenciales inválidas
+        }
+
+        public void ActualizarUltimoAcceso(int userId)
+        {
+            using (SqlConnection conn = Conexion.ObtenerConexion())
+            {
+                conn.Open();
+                string query = @"UPDATE UMG_USERS 
+                          SET UMG_Ultimo_Acceso = GETDATE(), UMG_Ingreso = 1
+                          WHERE UMG_ID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
