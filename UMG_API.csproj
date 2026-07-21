@@ -172,7 +172,11 @@
     <Compile Include="Models\Condicion.cs" />
     <Compile Include="Models\DTO\CambiarContrasenaDto.cs" />
     <Compile Include="Models\DTO\CondicionCreateDto.cs" />
+    <Compile Include="Models\DTO\CondicionListDto.cs" />
+    <Compile Include="Models\DTO\CondicionUpdateDto.cs" />
     <Compile Include="Models\DTO\LabCreateDto.cs" />
+    <Compile Include="Models\DTO\LabListDto.cs" />
+    <Compile Include="Models\DTO\LabUpdateDto.cs" />
     <Compile Include="Models\DTO\LoginDto.cs" />
     <Compile Include="Models\DTO\LoginResponseDto.cs" />
     <Compile Include="Models\DTO\ReservaCreateDto.cs" />

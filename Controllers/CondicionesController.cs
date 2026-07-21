@@ -38,5 +38,61 @@ namespace UMG_API.Controllers
                 return InternalServerError();
             }
         }
+
+        // GET api/condiciones
+        [HttpGet]
+        [Route("")]
+        public IHttpActionResult Get()
+        {
+            var condiciones = _service.ObtenerTodas();
+            return Content(HttpStatusCode.OK, condiciones);
+        }
+
+        // PUT api/condiciones/{id}
+        [HttpPut]
+        [Route("{id:int}")]
+        public IHttpActionResult Put(int id, [FromBody] CondicionUpdateDto dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest("El cuerpo de la solicitud no puede estar vacío.");
+            }
+
+            try
+            {
+                _service.ActualizarCondicion(id, dto.UMG_Lab_ID, dto.UMG_Fecha,
+                    dto.UMG_Hora_Inicio, dto.UMG_Hora_Fin, dto.UMG_Tipo, dto.UMG_Motivo, dto.UMG_Estado);
+
+                return Content(HttpStatusCode.OK, new { mensaje = "Bloqueo actualizado correctamente." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        // PATCH api/condiciones/{id}/inactivar
+        [HttpPatch]
+        [Route("{id:int}/inactivar")]
+        public IHttpActionResult Inactivar(int id)
+        {
+            try
+            {
+                _service.InactivarCondicion(id);
+                return Content(HttpStatusCode.OK, new { mensaje = "Bloqueo inactivado correctamente." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
     }
 }
