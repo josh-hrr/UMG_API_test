@@ -11,12 +11,12 @@ namespace UMG_API.Services
 
         public LoginResponseDto Login(string correo, string contrasena)
         {
-            if (string.IsNullOrWhiteSpace(correo) || string.IsNullOrWhiteSpace(contrasena))
+            if (string.IsNullOrWhiteSpace(correo.ToUpper()) || string.IsNullOrWhiteSpace(contrasena))
             {
                 throw new ArgumentException("Debe ingresar usuario y contraseña.");
             }
 
-            var usuario = _repository.ValidarCredenciales(correo.Trim().ToLower(), contrasena);
+            var usuario = _repository.ValidarCredenciales(correo.Trim().ToUpper(), contrasena);
 
             if (usuario == null)
             {

@@ -13,5 +13,6 @@ namespace UMG_API.Models.DTO
         public string UMG_Apellido { get; set; }
         public int UMG_Rol_ID { get; set; }
         public string UMG_Rol_Nombre { get; set; }
+        public bool RequiereCambioContrasena { get; set; }
     }
 }
