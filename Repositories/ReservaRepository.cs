@@ -63,11 +63,12 @@ namespace UMG_API.Repositories
                 conn.Open();
 
                 string query = @"SELECT COUNT(1) FROM UMG_RESERV
-                                  WHERE UMG_Lab_ID = @LabId
-                                    AND UMG_Fecha_Reserva = @Fecha
-                                    AND UMG_Estado = 'R'
-                                    AND UMG_Hora_Inicio < @HoraFin
-                                    AND UMG_Hora_Fin > @HoraInicio";
+                          WHERE UMG_Lab_ID = @LabId
+                            AND UMG_Fecha_Reserva = @Fecha
+                            AND UMG_Estado = 'R'
+                            AND UMG_Hora_Inicio < @HoraFin
+                            AND UMG_Hora_Fin > @HoraInicio
+                            AND (CAST(UMG_Fecha_Reserva AS DATETIME) + CAST(UMG_Hora_Fin AS DATETIME)) > GETDATE()";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -89,11 +90,12 @@ namespace UMG_API.Repositories
                 conn.Open();
 
                 string query = @"SELECT COUNT(1) FROM UMG_CONDI
-                                  WHERE (UMG_Lab_ID = @LabId OR UMG_Lab_ID IS NULL)
-                                    AND UMG_Fecha = @Fecha
-                                    AND UMG_Estado = 1
-                                    AND UMG_Hora_Inicio < @HoraFin
-                                    AND UMG_Hora_Fin > @HoraInicio";
+                          WHERE (UMG_Lab_ID = @LabId OR UMG_Lab_ID IS NULL)
+                            AND UMG_Fecha = @Fecha
+                            AND UMG_Estado = 1
+                            AND UMG_Hora_Inicio < @HoraFin
+                            AND UMG_Hora_Fin > @HoraInicio
+                            AND (CAST(UMG_Fecha AS DATETIME) + CAST(UMG_Hora_Fin AS DATETIME)) > GETDATE()";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
