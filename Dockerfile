@@ -19,4 +19,4 @@ COPY --from=build /app/out ./
 ENV ASPNETCORE_URLS=http://+:10000
 EXPOSE 10000
 
-ENTRYPOINT ["dotnet", "UMG_API.dll"]
+ENTRYPOINT ["dotnet", "UMG_API.dll"] 
